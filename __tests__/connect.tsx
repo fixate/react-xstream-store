@@ -1,9 +1,3 @@
-describe('Provider', () => {
-  test('-> makes state available to components via context', () => {
-    expect(false).toBe(true);
-  });
-});
-
 describe('connect', () => {
   test('-> wrapped component has access to state', () => {
     expect(false).toBe(true);
