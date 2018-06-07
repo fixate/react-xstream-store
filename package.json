@@ -3,6 +3,7 @@
   "version": "0.0.0-development",
   "description": "A ReactJS state provider and connector for xstream-store",
   "main": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
     "changelog": "conventional-changelog --infile CHANGELOG.md --same-file --release-count 0 --preset angular",
     "commit": "git-cz",
