@@ -26,16 +26,11 @@ const defaultContextValue: IStoreContext = {
 
 const {Provider, Consumer} = React.createContext(defaultContextValue);
 
-// Consumer is a render prop accepting a function
-// Wrap connector in Consumer, passing in state$ and dispatch
-// XstreamConsumer must also accept selector and actions
-// it then creates a subscription based on selected$
-
 export interface IXstreamConnectorProps {
   store: IStoreContext;
-  actionMap: IActionMap;
+  actions: IActionMap;
   selector: StateSelector;
-  children: () => React.ReactNode;
+  children?: (a: any) => React.ReactNode;
 }
 
 class XstreamConnector extends React.Component<IXstreamConnectorProps> {
@@ -62,32 +57,36 @@ class XstreamConnector extends React.Component<IXstreamConnectorProps> {
   }
 
   render() {
-    const {children, store} = this.props;
-    const WrappedComponent = children();
+    const {children, store, ...restProps} = this.props;
 
-    return <WrappedComponent {...this.state} dispatch={store.dispatch} />;
+    return children({...this.state, ...restProps, dispatch: store.dispatch});
   }
 }
 
 export interface IXstreamConsumerProps {
   selector: StateSelector;
   actions: IActionMap;
+  children: () => React.ReactNode;
 }
 
 const XstreamConsumer: React.SFC<IXstreamConsumerProps> = ({
   selector,
   actions,
+  children,
 }) => (
   <Consumer>
     {(store: IStoreContext) => (
-      <XstreamConnector store={store} selector={selector} actions={actions} />
+      <XstreamConnector
+        children={children}
+        store={store}
+        selector={selector}
+        actions={actions}
+      />
     )}
   </Consumer>
 );
 
-class XstreamContext extends React.Component {
-  Provider = Provider;
-  Consumer = XstreamConsumer;
-}
-
-export default XstreamContext;
+export default {
+  Provider,
+  Consumer: XstreamConsumer,
+};
