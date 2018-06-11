@@ -10,7 +10,7 @@ describe('Provider', () => {
     const {container, getByTestId} = render(
       <XstreamContext.Provider value={store}>
         <XstreamContext.Consumer>
-          {({dispatch, counter}) => (
+          {({counter}) => (
             <div data-testid="counter-container">{counter.value}</div>
           )}
         </XstreamContext.Consumer>
