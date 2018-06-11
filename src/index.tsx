@@ -60,12 +60,17 @@ class XstreamConnector extends React.Component<IXstreamConnectorProps> {
   }
 
   render() {
-    const {children, store, selector, ...restProps} = this.props;
+    const {children, store, selector, actions, ...restProps} = this.props;
     const state = this.state
       ? this.state
       : (selector || defaultSelector)(store.initialState);
 
-    return children({...state, ...restProps, dispatch: store.dispatch});
+    return children({
+      ...state,
+      ...restProps,
+      ...actions,
+      dispatch: store.dispatch,
+    });
   }
 }
 
