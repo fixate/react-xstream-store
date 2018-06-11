@@ -14,6 +14,6 @@ const createCounter$ = select =>
         value: state.value + 1,
       }))
     )
-    .startWith(() => initialState);
+    .startWith(initialState);
 
 export {createCounter$};
