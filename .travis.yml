@@ -7,7 +7,7 @@ notifications:
 node_js:
   - '9'
   - '8'
-  - '6'
+  - '7'
 script:
   - npm i --no-save xstream react
   - npm run lint
