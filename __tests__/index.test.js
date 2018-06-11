@@ -1,21 +1,23 @@
 import * as React from 'react';
 import {render} from 'react-testing-library';
+import 'jest-dom/extend-expect';
 
 import XstreamContext from '../src';
 import store from './store';
 
-// $ node --inspect $(npm bin)/jest --watch
-
 describe('Provider', () => {
   test('-> makes state available to components via context', () => {
-    const root = render(
+    const {container, getByTestId} = render(
       <XstreamContext.Provider value={store}>
         <XstreamContext.Consumer>
-          {({dispatch, state}) => <div>{state.value}</div>}
+          {({dispatch, counter}) => (
+            <div data-testid="counter-container">{counter.value}</div>
+          )}
         </XstreamContext.Consumer>
       </XstreamContext.Provider>
     );
+    const counterContainer = getByTestId('counter-container');
 
-    expect(false).toBe(true);
+    expect(counterContainer).toHaveTextContent('0');
   });
 });
