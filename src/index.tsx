@@ -11,6 +11,7 @@ export type State$ = Stream<IState>;
 export interface IStoreContext {
   state$: State$;
   dispatch: IDispatch;
+  initialState: IState;
 }
 
 export type ActionCreator = (a: any) => IAction;
@@ -22,6 +23,7 @@ export interface IActionMap {
 const defaultContextValue: IStoreContext = {
   state$: xs.empty(),
   dispatch: () => {},
+  initialState: {},
 };
 
 const {Provider, Consumer} = React.createContext(defaultContextValue);
@@ -33,12 +35,13 @@ export interface IXstreamConnectorProps {
   children?: (a: any) => React.ReactNode;
 }
 
+const defaultSelector: StateSelector = state => state;
+
 class XstreamConnector extends React.Component<IXstreamConnectorProps> {
   subscription = {unsubscribe: () => {}};
 
   componentDidMount() {
     const {store, selector} = this.props;
-    const defaultSelector: StateSelector = state => state;
     const selected$ = store.state$.map(selector || defaultSelector);
 
     this.subscription = selected$.subscribe({
@@ -57,9 +60,12 @@ class XstreamConnector extends React.Component<IXstreamConnectorProps> {
   }
 
   render() {
-    const {children, store, ...restProps} = this.props;
+    const {children, store, selector, ...restProps} = this.props;
+    const state = this.state
+      ? this.state
+      : (selector || defaultSelector)(store.initialState);
 
-    return children({...this.state, ...restProps, dispatch: store.dispatch});
+    return children({...state, ...restProps, dispatch: store.dispatch});
   }
 }
 
