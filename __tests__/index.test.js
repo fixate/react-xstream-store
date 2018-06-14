@@ -3,10 +3,11 @@ import {render} from 'react-testing-library';
 import 'jest-dom/extend-expect';
 
 import XstreamContext from '../src';
-import store from './store';
+import {getNewStore} from './store';
 
 describe('Provider', () => {
   test('-> makes state available to components via context', () => {
+    const store = getNewStore();
     const {container, getByTestId} = render(
       <XstreamContext.Provider value={store}>
         <XstreamContext.Consumer>
@@ -20,4 +21,5 @@ describe('Provider', () => {
 
     expect(counterContainer).toHaveTextContent('0');
   });
+    const store = getNewStore();
 });

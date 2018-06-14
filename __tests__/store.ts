@@ -6,6 +6,6 @@ const streamCreators = {
   counter: createCounter$,
 };
 
-const store = createStore(streamCreators, []);
+const getNewStore = () => createStore(streamCreators, []);
 
-export default store;
+export {getNewStore};
