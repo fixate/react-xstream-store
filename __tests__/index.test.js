@@ -4,6 +4,7 @@ import 'jest-dom/extend-expect';
 
 import XstreamContext from '../src';
 import {getNewStore} from './store';
+import {incrementAction, incrementActionCreator} from './counter-stream';
 
 describe('Provider', () => {
   test('-> makes state available to components via context', () => {

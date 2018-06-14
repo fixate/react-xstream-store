@@ -2,7 +2,8 @@ import xs from 'xstream';
 import {IAction} from 'xstream-store';
 
 export const INCREMENT_TYPE = 'increment';
-export const increment = (): IAction => ({type: INCREMENT_TYPE});
+export const incrementAction: IAction = {type: INCREMENT_TYPE};
+export const incrementActionCreator = (): IAction => incrementAction;
 
 const initialState = {value: 0};
 
