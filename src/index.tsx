@@ -14,7 +14,7 @@ export interface IStoreContext {
   initialState: IState;
 }
 
-export type ActionCreator = (a: any) => IAction;
+export type ActionCreator = (...xs: any[]) => IAction;
 export type StateSelector = (s: IState) => IState;
 export interface IActionMap {
   [key: string]: IAction | ActionCreator;
@@ -97,28 +97,28 @@ class XstreamConnector extends React.Component<IXstreamConnectorProps> {
   }
 }
 
-export interface IXstreamConsumerProps {
-  selector: StateSelector;
+export interface IConsumerProps {
   actions: IActionMap;
-  children: () => React.ReactNode;
+  children: (...props: any[]) => React.ReactNode;
+  selector: StateSelector;
 }
 
-const XstreamConsumer: React.SFC<IXstreamConsumerProps> = ({
-  selector,
-  actions,
-  children,
-}) => (
-  <Consumer>
+const Provider = OriginalProvider;
+Provider.displayName = 'XstreamProvider';
+
+const Consumer: React.SFC<IConsumerProps> = ({selector, actions, children}) => (
+  <OriginalConsumer>
     {(store: IStoreContext) => (
       <XstreamConnector
-        children={children}
-        store={store}
-        selector={selector}
         actions={actions}
+        children={children}
+        selector={selector}
+        store={store}
       />
     )}
-  </Consumer>
+  </OriginalConsumer>
 );
+Consumer.displayName = 'XstreamConsumer';
 
 const XstreamContext = {
   Provider: OriginalProvider,
