@@ -110,4 +110,21 @@ describe('XstreamContext', () => {
 
     store.state$.shamefullySendComplete();
   });
+
+  test('-> components can be connected via a HOC', () => {
+    const store = getNewStore();
+    const actions = {increment: incrementActionCreator};
+    const MyComp = ({counter}) => (
+      <div data-testid="counter-container">{counter.value}</div>
+    );
+    const MyConnectedComponent = withStream()(MyComp);
+    const {getByTestId} = renderIntoDocument(
+      <Provider value={store}>
+	<MyConnectedComponent />
+      </Provider>
+    );
+    const counterContainer = getByTestId('counter-container');
+
+    expect(counterContainer).toHaveTextContent('0');
+  });
 });
