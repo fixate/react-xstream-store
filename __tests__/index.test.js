@@ -127,4 +127,25 @@ describe('XstreamContext', () => {
 
     expect(counterContainer).toHaveTextContent('0');
   });
+
+  test('-> HOC passes down props', () => {
+    const store = getNewStore();
+    const propToPass = {prop1: 'foo', prop2: 'bar'};
+    const actions = {increment: incrementActionCreator};
+    const MyComp = ({prop1, prop2}) => (
+      <div>
+        <div data-testid="p1">{prop1}</div>;
+        <div data-testid="p2">{prop2}</div>;
+      </div>
+    );
+    const MyConnectedComponent = withStream()(MyComp);
+    const {getByTestId} = renderIntoDocument(
+      <Provider value={store}>
+        <MyConnectedComponent {...propToPass} />
+      </Provider>
+    );
+
+    expect(getByTestId('p1')).toHaveTextContent(propToPass.prop1);
+    expect(getByTestId('p2')).toHaveTextContent(propToPass.prop2);
+  });
 });
