@@ -26,7 +26,10 @@ const defaultContextValue: IStoreContext = {
   initialState: {},
 };
 
-const {Provider, Consumer} = React.createContext(defaultContextValue);
+const {
+  Provider: OriginalProvider,
+  Consumer: OriginalConsumer,
+} = React.createContext(defaultContextValue);
 
 export interface IXstreamConnectorProps {
   store: IStoreContext;
@@ -97,7 +100,10 @@ const XstreamConsumer: React.SFC<IXstreamConsumerProps> = ({
   </Consumer>
 );
 
-export default {
-  Provider,
-  Consumer: XstreamConsumer,
+const XstreamContext = {
+  Provider: OriginalProvider,
+  Consumer,
 };
+export {Provider, Consumer, withStream};
+
+export default XstreamContext;

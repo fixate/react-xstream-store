@@ -13,17 +13,17 @@ import XstreamContext from '../src';
 import {getNewStore} from './store';
 import {incrementAction, incrementActionCreator} from './counter-stream';
 
-describe('Provider', () => {
+describe('XstreamContext', () => {
   test('-> makes state available to components via context', () => {
     const store = getNewStore();
     const {container, getByTestId} = render(
-      <XstreamContext.Provider value={store}>
-        <XstreamContext.Consumer>
+      <Provider value={store}>
+	<Consumer>
           {({counter}) => (
             <div data-testid="counter-container">{counter.value}</div>
           )}
-        </XstreamContext.Consumer>
-      </XstreamContext.Provider>
+	</Consumer>
+      </Provider>
     );
     const counterContainer = getByTestId('counter-container');
 
@@ -35,13 +35,13 @@ describe('Provider', () => {
     const actions = {increment: incrementAction};
     const spy = jest.spyOn(store, 'dispatch');
     const {getByTestId} = renderIntoDocument(
-      <XstreamContext.Provider value={store}>
-        <XstreamContext.Consumer actions={actions}>
+      <Provider value={store}>
+	<Consumer actions={actions}>
           {({dispatch, increment}) => (
             <button data-testid="button" onClick={() => dispatch(increment)} />
           )}
-        </XstreamContext.Consumer>
-      </XstreamContext.Provider>
+	</Consumer>
+      </Provider>
     );
     const button = getByTestId('button');
 
@@ -63,8 +63,8 @@ describe('Provider', () => {
     const actions = {increment: incrementActionCreator};
     const spy = jest.spyOn(store, 'dispatch');
     const {getByTestId} = renderIntoDocument(
-      <XstreamContext.Provider value={store}>
-        <XstreamContext.Consumer actions={actions}>
+      <Provider value={store}>
+	<Consumer actions={actions}>
           {({increment}) => <button data-testid="button" onClick={increment} />}
         </XstreamContext.Consumer>
       </XstreamContext.Provider>
