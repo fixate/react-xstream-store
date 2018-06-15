@@ -76,7 +76,7 @@
       "path": "node_modules/cz-conventional-changelog"
     },
     "ghooks": {
-      "prepush": "npm run test && npm run lint"
+      "pre-push": "npm run test && npm run lint"
     }
   }
 }
