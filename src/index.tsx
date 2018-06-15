@@ -38,7 +38,26 @@ export interface IXstreamConnectorProps {
   children?: (a: any) => React.ReactNode;
 }
 
+export type IActionBinder = (...xs: any[]) => void;
+
 const defaultSelector: StateSelector = state => state;
+
+const getBoundActions = (
+  actions: IActionMap = {},
+  dispatch: IDispatch
+): IActionMap => {
+  const boundActions = Object.keys(actions).reduce((acc, actionName) => {
+    const action: ActionCreator | IAction = actions[actionName];
+    const isActionCreator = typeof action === 'function';
+    const actionToReturn: IActionBinder | IAction = isActionCreator
+      ? (...args) => dispatch((action as ActionCreator)(...args))
+      : action;
+
+    return {...acc, [actionName]: actionToReturn};
+  }, {});
+
+  return boundActions;
+};
 
 class XstreamConnector extends React.Component<IXstreamConnectorProps> {
   subscription = {unsubscribe: () => {}};
@@ -64,14 +83,15 @@ class XstreamConnector extends React.Component<IXstreamConnectorProps> {
 
   render() {
     const {children, store, selector, actions, ...restProps} = this.props;
-    const state = this.state
+    const boundActions = getBoundActions(actions, store.dispatch);
+    const streamState = this.state
       ? this.state
       : (selector || defaultSelector)(store.initialState);
 
     return children({
-      ...state,
+      ...streamState,
+      ...boundActions,
       ...restProps,
-      ...actions,
       dispatch: store.dispatch,
     });
   }
