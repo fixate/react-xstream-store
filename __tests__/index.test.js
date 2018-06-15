@@ -81,12 +81,30 @@ describe('XstreamContext', () => {
 
     store.state$.shamefullySendComplete();
   });
+
+  test('-> actionCreators are invoked with all parameters', () => {
+    const store = getNewStore();
+    const actions = {increment: incrementActionCreator};
+    const spy = jest.spyOn(actions, 'increment');
+    const args = ['foo', 'bar'];
+    const {getByTestId} = renderIntoDocument(
+      <Provider value={store}>
+	<Consumer actions={actions}>
+	  {({increment}) => (
+	    <button data-testid="button" onClick={() => increment(...args)} />
+	  )}
+	</Consumer>
+      </Provider>
+    );
+    const button = getByTestId('button');
+
     fireEvent.click(button);
 
     store.state$.compose(buffer(xs.never())).subscribe({
       next(xs) {
-        expect(xs[0].counter.value).toBe(2);
-        expect(spy).toHaveBeenCalledTimes(2);
+	expect(xs[0].counter.value).toBe(1);
+	expect(spy).toHaveBeenCalledTimes(1);
+	expect(spy).toHaveBeenCalledWith(...args);
       },
     });
 
