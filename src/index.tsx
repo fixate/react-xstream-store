@@ -124,6 +124,17 @@ const XstreamContext = {
   Provider: OriginalProvider,
   Consumer,
 };
+
+const withStream = (selector: StateSelector, actions: IActionMap) => (
+  ComponentToWrap: React.ComponentClass
+) => () => (
+  <Consumer
+    selector={selector}
+    actions={actions}
+    children={(props: any) => <ComponentToWrap {...props} />}
+  />
+);
+
 export {Provider, Consumer, withStream};
 
 export default XstreamContext;
