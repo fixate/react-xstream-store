@@ -30,7 +30,7 @@ describe('XstreamContext', () => {
     expect(counterContainer).toHaveTextContent('0');
   });
 
-  test('-> components can dispatch plain actions', () => {
+  test('-> components can manually dispatch actions', () => {
     const store = getNewStore();
     const actions = {increment: incrementAction};
     const spy = jest.spyOn(store, 'dispatch');
@@ -46,19 +46,18 @@ describe('XstreamContext', () => {
     const button = getByTestId('button');
 
     fireEvent.click(button);
-    fireEvent.click(button);
 
     store.state$.compose(buffer(xs.never())).subscribe({
       next(xs) {
-        expect(xs[0].counter.value).toBe(2);
-        expect(spy).toHaveBeenCalledTimes(2);
+	expect(xs[0].counter.value).toBe(1);
+	expect(spy).toHaveBeenCalledTimes(1);
       },
     });
 
     store.state$.shamefullySendComplete();
   });
 
-  test('-> action creators are are automatically bound to dispatch', () => {
+  test('-> components can execute actionCreators without dispatch', () => {
     const store = getNewStore();
     const actions = {increment: incrementActionCreator};
     const spy = jest.spyOn(store, 'dispatch');
@@ -66,12 +65,22 @@ describe('XstreamContext', () => {
       <Provider value={store}>
 	<Consumer actions={actions}>
           {({increment}) => <button data-testid="button" onClick={increment} />}
-        </XstreamContext.Consumer>
-      </XstreamContext.Provider>
+	</Consumer>
+      </Provider>
     );
     const button = getByTestId('button');
 
     fireEvent.click(button);
+
+    store.state$.compose(buffer(xs.never())).subscribe({
+      next(xs) {
+	expect(xs[0].counter.value).toBe(1);
+	expect(spy).toHaveBeenCalledTimes(1);
+      },
+    });
+
+    store.state$.shamefullySendComplete();
+  });
     fireEvent.click(button);
 
     store.state$.compose(buffer(xs.never())).subscribe({
