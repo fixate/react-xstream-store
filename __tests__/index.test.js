@@ -9,7 +9,7 @@ import {
 } from 'react-testing-library';
 import 'jest-dom/extend-expect';
 
-import XstreamContext from '../src';
+import {Consumer, Provider, withStream} from '../src';
 import {getNewStore} from './store';
 import {incrementAction, incrementActionCreator} from './counter-stream';
 
@@ -18,11 +18,11 @@ describe('XstreamContext', () => {
     const store = getNewStore();
     const {container, getByTestId} = render(
       <Provider value={store}>
-	<Consumer>
+        <Consumer>
           {({counter}) => (
             <div data-testid="counter-container">{counter.value}</div>
           )}
-	</Consumer>
+        </Consumer>
       </Provider>
     );
     const counterContainer = getByTestId('counter-container');
@@ -36,11 +36,11 @@ describe('XstreamContext', () => {
     const spy = jest.spyOn(store, 'dispatch');
     const {getByTestId} = renderIntoDocument(
       <Provider value={store}>
-	<Consumer actions={actions}>
+        <Consumer actions={actions}>
           {({dispatch, increment}) => (
             <button data-testid="button" onClick={() => dispatch(increment)} />
           )}
-	</Consumer>
+        </Consumer>
       </Provider>
     );
     const button = getByTestId('button');
@@ -49,8 +49,8 @@ describe('XstreamContext', () => {
 
     store.state$.compose(buffer(xs.never())).subscribe({
       next(xs) {
-	expect(xs[0].counter.value).toBe(1);
-	expect(spy).toHaveBeenCalledTimes(1);
+        expect(xs[0].counter.value).toBe(1);
+        expect(spy).toHaveBeenCalledTimes(1);
       },
     });
 
@@ -63,9 +63,9 @@ describe('XstreamContext', () => {
     const spy = jest.spyOn(store, 'dispatch');
     const {getByTestId} = renderIntoDocument(
       <Provider value={store}>
-	<Consumer actions={actions}>
+        <Consumer actions={actions}>
           {({increment}) => <button data-testid="button" onClick={increment} />}
-	</Consumer>
+        </Consumer>
       </Provider>
     );
     const button = getByTestId('button');
@@ -74,8 +74,8 @@ describe('XstreamContext', () => {
 
     store.state$.compose(buffer(xs.never())).subscribe({
       next(xs) {
-	expect(xs[0].counter.value).toBe(1);
-	expect(spy).toHaveBeenCalledTimes(1);
+        expect(xs[0].counter.value).toBe(1);
+        expect(spy).toHaveBeenCalledTimes(1);
       },
     });
 
@@ -89,11 +89,11 @@ describe('XstreamContext', () => {
     const args = ['foo', 'bar'];
     const {getByTestId} = renderIntoDocument(
       <Provider value={store}>
-	<Consumer actions={actions}>
-	  {({increment}) => (
-	    <button data-testid="button" onClick={() => increment(...args)} />
-	  )}
-	</Consumer>
+        <Consumer actions={actions}>
+          {({increment}) => (
+            <button data-testid="button" onClick={() => increment(...args)} />
+          )}
+        </Consumer>
       </Provider>
     );
     const button = getByTestId('button');
@@ -102,9 +102,9 @@ describe('XstreamContext', () => {
 
     store.state$.compose(buffer(xs.never())).subscribe({
       next(xs) {
-	expect(xs[0].counter.value).toBe(1);
-	expect(spy).toHaveBeenCalledTimes(1);
-	expect(spy).toHaveBeenCalledWith(...args);
+        expect(xs[0].counter.value).toBe(1);
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledWith(...args);
       },
     });
 
@@ -120,7 +120,7 @@ describe('XstreamContext', () => {
     const MyConnectedComponent = withStream()(MyComp);
     const {getByTestId} = renderIntoDocument(
       <Provider value={store}>
-	<MyConnectedComponent />
+        <MyConnectedComponent />
       </Provider>
     );
     const counterContainer = getByTestId('counter-container');
