@@ -36,6 +36,7 @@ export interface IXstreamConnectorProps {
   actions: IActionMap;
   selector: StateSelector;
   children?: (a: any) => React.ReactNode;
+  ref: any;
 }
 
 export type IActionBinder = (...xs: any[]) => void;
@@ -127,13 +128,21 @@ const XstreamContext = {
 
 const withStream = (selector: StateSelector, actions: IActionMap) => (
   ComponentToWrap: React.ComponentClass
-) => () => (
-  <Consumer
-    selector={selector}
-    actions={actions}
-    children={(props: any) => <ComponentToWrap {...props} />}
-  />
-);
+) => {
+  const Wrapper = (props: object, ref: any) => (
+    <Consumer
+      actions={actions}
+      children={(consumerProps: any) => (
+        <ComponentToWrap {...consumerProps} {...props} />
+      )}
+      selector={selector}
+    />
+  );
+
+  Wrapper.displayName = `withXstream(${ComponentToWrap.displayName})`;
+
+  return Wrapper;
+};
 
 export {Provider, Consumer, withStream};
 
