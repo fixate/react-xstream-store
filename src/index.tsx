@@ -129,12 +129,16 @@ const XstreamContext = {
 const withStream = (selector: StateSelector, actions: IActionMap) => (
   ComponentToWrap: React.ComponentClass
 ) => {
-  const Wrapper = (props: object, ref: any) => (
+  const Wrapper: React.SFC<{
+    innerRef?: React.RefObject<any>;
+    [key: string]: any;
+  }> = (props, ref: any) => (
     <Consumer
       actions={actions}
       children={(consumerProps: any) => (
         <ComponentToWrap {...consumerProps} {...props} />
       )}
+      ref={props.innerRef}
       selector={selector}
     />
   );
