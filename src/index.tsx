@@ -36,7 +36,6 @@ export interface IXstreamConnectorProps {
   actions: IActionMap;
   selector: StateSelector;
   children?: (a: any) => React.ReactNode;
-  ref: any;
 }
 
 export type IActionBinder = (...xs: any[]) => void;
@@ -90,22 +89,23 @@ class XstreamConnector extends React.Component<IXstreamConnectorProps> {
       : (selector || defaultSelector)(store.initialState);
 
     return children({
-      ...streamState,
-      ...boundActions,
       ...restProps,
+      ...boundActions,
+      ...streamState,
       dispatch: store.dispatch,
     });
   }
 }
 
-export interface IConsumerProps {
-  actions: IActionMap;
-  children: (...props: any[]) => React.ReactNode;
-  selector: StateSelector;
-}
-
 const Provider = OriginalProvider;
 Provider.displayName = 'XstreamProvider';
+
+export interface IConsumerProps {
+  actions?: IActionMap;
+  children: (...props: any[]) => React.ReactNode;
+  selector?: StateSelector;
+  ref?: React.RefObject<any>;
+}
 
 const Consumer: React.SFC<IConsumerProps> = ({selector, actions, children}) => (
   <OriginalConsumer>
