@@ -5,13 +5,11 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "changelog":
-      "conventional-changelog --infile CHANGELOG.md --same-file --release-count 0 --preset angular",
+    "changelog": "conventional-changelog --infile CHANGELOG.md --same-file --release-count 0 --preset angular",
     "commit": "git-cz",
     "compile": "tsc",
     "predist": "rm -rf dist/ && mkdirp dist/ && npm run compile",
-    "dist":
-      "browserify index.js --standalone xstream-store --external xstream > dist/xstream-store.js",
+    "dist": "browserify index.js --standalone xstream-store --external xstream > dist/xstream-store.js",
     "postdist": "uglifyjs dist/xstream-store.js -o dist/xstream-store.min.js",
     "lint": "tslint src/**/*.ts -t verbose -t stylish",
     "watch:lint": "chokidar src/**/*.{ts,tsx} -c \"npm run lint\" --initial",
@@ -25,7 +23,10 @@
     "type": "git",
     "url": "https://github.com/fixate/react-xstream-store.git"
   },
-  "keywords": ["reactjs", "xstream"],
+  "keywords": [
+    "reactjs",
+    "xstream"
+  ],
   "author": "Larry Botha",
   "license": "MIT",
   "bugs": {
