@@ -107,45 +107,54 @@ export interface IConsumerProps {
   ref?: React.RefObject<any>;
 }
 
-const Consumer: React.SFC<IConsumerProps> = ({selector, actions, children}) => (
-  <OriginalConsumer>
-    {(store: IStoreContext) => (
-      <XstreamConnector
-        actions={actions}
-        children={children}
-        selector={selector}
-        store={store}
-      />
-    )}
-  </OriginalConsumer>
-);
-Consumer.displayName = 'XstreamConsumer';
+class Consumer extends React.Component<IConsumerProps> {
+  displayName = 'XstreamConsumer';
+
+  render() {
+    const {selector, actions, children} = this.props;
+
+    return (
+      <OriginalConsumer>
+        {(store: IStoreContext) => (
+          <XstreamConnector
+            actions={actions}
+            children={children}
+            selector={selector}
+            store={store}
+          />
+        )}
+      </OriginalConsumer>
+    );
+  }
+}
 
 const XstreamContext = {
-  Provider: OriginalProvider,
   Consumer,
+  Provider: OriginalProvider,
 };
 
 const withStream = (selector: StateSelector, actions: IActionMap) => (
   ComponentToWrap: React.ComponentClass
 ) => {
-  const Wrapper: React.SFC<{
+  return class extends React.Component<{
     innerRef?: React.RefObject<any>;
     [key: string]: any;
-  }> = (props, ref: any) => (
-    <Consumer
-      actions={actions}
-      children={(consumerProps: any) => (
-        <ComponentToWrap {...consumerProps} {...props} />
-      )}
-      ref={props.innerRef}
-      selector={selector}
-    />
-  );
+  }> {
+    displayName = `withXstream(${ComponentToWrap.displayName})`;
 
-  Wrapper.displayName = `withXstream(${ComponentToWrap.displayName})`;
-
-  return Wrapper;
+    render() {
+      return (
+        <Consumer
+          actions={actions}
+          children={(consumerProps: any) => (
+            <ComponentToWrap {...consumerProps} {...this.props} />
+          )}
+          ref={this.props.innerRef}
+          selector={selector}
+        />
+      );
+    }
+  };
 };
 
 export {Provider, Consumer, withStream};
