@@ -10,9 +10,8 @@ npm i react-xstream-store xstream-store xstream
 
 ## Todo
 
-- [  ] add test
-- [  ] add usage
-- [  ] add examples
+- [ ] add usage
+- [ ] add examples
 
 ## License
 
