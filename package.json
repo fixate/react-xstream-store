@@ -1,6 +1,6 @@
 {
   "name": "react-xstream-store",
-  "version": "0.0.0-development",
+  "version": "0.0.0-semantically-released",
   "description": "A ReactJS state provider and connector for xstream-store",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -17,7 +17,8 @@
     "test": "jest",
     "watch:test": "jest --watch",
     "watch:test:debug": "node --inspect $(npm bin)/jest --watch",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "report-coverage": "cat ./coverage/lcov.info | codecov"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "browserify": "^16.2.2",
     "chokidar": "^2.0.3",
     "chokidar-cli": "^1.2.0",
+    "codecov": "^3.0.2",
     "commitizen": "^2.10.1",
     "conventional-changelog": "^2.0.0",
     "conventional-changelog-cli": "^2.0.0",
