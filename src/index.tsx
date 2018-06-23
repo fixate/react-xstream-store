@@ -31,7 +31,7 @@ const {
   Consumer: OriginalConsumer,
 } = React.createContext(defaultContextValue);
 
-export interface IXstreamConnectorProps {
+export interface IXstreamConsumerProps {
   store: IStoreContext;
   actions: IActionMap;
   selector: StateSelector;
@@ -59,7 +59,7 @@ const getBoundActions = (
   return boundActions;
 };
 
-class XstreamConnector extends React.Component<IXstreamConnectorProps> {
+class XstreamConsumer extends React.Component<IXstreamConsumerProps> {
   subscription = {unsubscribe: () => {}};
 
   componentDidMount() {
@@ -116,7 +116,7 @@ class Consumer extends React.Component<IConsumerProps> {
     return (
       <OriginalConsumer>
         {(store: IStoreContext) => (
-          <XstreamConnector
+          <XstreamConsumer
             actions={actions}
             children={children}
             selector={selector}
