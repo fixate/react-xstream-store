@@ -17,7 +17,7 @@ describe('XstreamContext', () => {
   test('-> makes state available to components via context', () => {
     const store = getNewStore();
     const {container, getByTestId} = render(
-      <Provider value={store}>
+      <Provider store={store}>
         <Consumer>
           {({counter}) => (
             <div data-testid="counter-container">{counter.value}</div>
@@ -35,7 +35,7 @@ describe('XstreamContext', () => {
     const actions = {increment: incrementAction};
     const spy = jest.spyOn(store, 'dispatch');
     const {getByTestId} = renderIntoDocument(
-      <Provider value={store}>
+      <Provider store={store}>
         <Consumer actions={actions}>
           {({dispatch, increment}) => (
             <button data-testid="button" onClick={() => dispatch(increment)} />
@@ -62,7 +62,7 @@ describe('XstreamContext', () => {
     const actions = {increment: incrementActionCreator};
     const spy = jest.spyOn(store, 'dispatch');
     const {getByTestId} = renderIntoDocument(
-      <Provider value={store}>
+      <Provider store={store}>
         <Consumer actions={actions}>
           {({increment}) => <button data-testid="button" onClick={increment} />}
         </Consumer>
@@ -88,7 +88,7 @@ describe('XstreamContext', () => {
     const spy = jest.spyOn(actions, 'increment');
     const args = ['foo', 'bar'];
     const {getByTestId} = renderIntoDocument(
-      <Provider value={store}>
+      <Provider store={store}>
         <Consumer actions={actions}>
           {({increment}) => (
             <button data-testid="button" onClick={() => increment(...args)} />
@@ -119,7 +119,7 @@ describe('XstreamContext', () => {
     );
     const MyConnectedComponent = withStream()(MyComp);
     const {getByTestId} = renderIntoDocument(
-      <Provider value={store}>
+      <Provider store={store}>
         <MyConnectedComponent />
       </Provider>
     );
@@ -140,7 +140,7 @@ describe('XstreamContext', () => {
     );
     const MyConnectedComponent = withStream()(MyComp);
     const {getByTestId} = renderIntoDocument(
-      <Provider value={store}>
+      <Provider store={store}>
         <MyConnectedComponent {...propToPass} />
       </Provider>
     );
