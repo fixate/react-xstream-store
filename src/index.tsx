@@ -29,16 +29,9 @@ const {
   Consumer: OriginalConsumer,
 } = React.createContext(defaultContextValue);
 
-export interface IXstreamConsumerProps {
-  store: IStoreContext;
-  actions: IActionMap;
-  selector: StateSelector;
-  children?: (a: any) => React.ReactNode;
-}
+const defaultSelector: StateSelector = state => state;
 
 export type IActionBinder = (...xs: any[]) => void;
-
-const defaultSelector: StateSelector = state => state;
 
 const getBoundActions = (
   actions: IActionMap = {},
@@ -57,7 +50,45 @@ const getBoundActions = (
   return boundActions;
 };
 
-class XstreamConsumer extends React.Component<IXstreamConsumerProps> {
+export interface IXstreamConnectConsumerProps {
+  streamState: IState;
+  dispatch: IDispatch;
+  actions: IActionMap;
+  selector: StateSelector;
+  children?: (a: any) => React.ReactNode;
+}
+
+class XstreamConnectConsumer extends React.Component<
+  IXstreamConnectConsumerProps
+> {
+  render() {
+    const {
+      actions,
+      children,
+      dispatch,
+      selector,
+      streamState,
+      ...restProps
+    } = this.props;
+    const boundActions = getBoundActions(actions, dispatch);
+    const selectedStreamState = (selector || defaultSelector)(streamState);
+
+    return children({
+      ...restProps,
+      ...boundActions,
+      ...selectedStreamState,
+      dispatch,
+    });
+  }
+}
+
+export interface IConsumerProps {
+  actions?: IActionMap;
+  children: (...props: any[]) => React.ReactNode;
+  selector?: StateSelector;
+  ref?: React.RefObject<any>;
+}
+
 export interface IXstreamProviderProps {
   store: {
     state$: State$;
@@ -90,29 +121,16 @@ class Provider extends React.Component<IXstreamProviderProps, IState> {
   }
 
   render() {
-    const {children, store, selector, actions, ...restProps} = this.props;
-    const boundActions = getBoundActions(actions, store.dispatch);
-    const streamState = this.state
-      ? this.state
-      : (selector || defaultSelector)(store.initialState);
+    const {children, store} = this.props;
+    const streamState = this.state || store.initialState;
 
-    return children({
-      ...restProps,
-      ...boundActions,
-      ...streamState,
-      dispatch: store.dispatch,
-    });
+    return (
+      <OriginalProvider
+        children={children}
+        value={{streamState, dispatch: store.dispatch}}
+      />
+    );
   }
-}
-
-const Provider = OriginalProvider;
-Provider.displayName = 'XstreamProvider';
-
-export interface IConsumerProps {
-  actions?: IActionMap;
-  children: (...props: any[]) => React.ReactNode;
-  selector?: StateSelector;
-  ref?: React.RefObject<any>;
 }
 
 class Consumer extends React.Component<IConsumerProps> {
@@ -123,12 +141,13 @@ class Consumer extends React.Component<IConsumerProps> {
 
     return (
       <OriginalConsumer>
-        {(store: IStoreContext) => (
-          <XstreamConsumer
+        {(props: IStoreContext) => (
+          <XstreamConnectConsumer
             actions={actions}
             children={children}
+            dispatch={props.dispatch}
             selector={selector}
-            store={store}
+            streamState={props.streamState}
           />
         )}
       </OriginalConsumer>
@@ -138,7 +157,7 @@ class Consumer extends React.Component<IConsumerProps> {
 
 const XstreamContext = {
   Consumer,
-  Provider: OriginalProvider,
+  Provider,
 };
 
 const withStream = (selector: StateSelector, actions: IActionMap) => (
