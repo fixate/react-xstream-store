@@ -8,22 +8,20 @@ export interface IState {
 
 export type State$ = Stream<IState>;
 
-export interface IStoreContext {
-  state$: State$;
-  dispatch: IDispatch;
-  initialState: IState;
-}
-
 export type ActionCreator = (...xs: any[]) => IAction;
 export type StateSelector = (s: IState) => IState;
 export interface IActionMap {
   [key: string]: IAction | ActionCreator;
 }
 
+export interface IStoreContext {
+  streamState: IState;
+  dispatch: IDispatch;
+}
+
 const defaultContextValue: IStoreContext = {
-  state$: xs.empty(),
+  streamState: {},
   dispatch: () => {},
-  initialState: {},
 };
 
 const {
@@ -60,13 +58,23 @@ const getBoundActions = (
 };
 
 class XstreamConsumer extends React.Component<IXstreamConsumerProps> {
+export interface IXstreamProviderProps {
+  store: {
+    state$: State$;
+    dispatch: IDispatch;
+    initialState: IState;
+  };
+}
+
+class Provider extends React.Component<IXstreamProviderProps, IState> {
+  displayName = 'XstreamProvider';
+
   subscription = {unsubscribe: () => {}};
 
   componentDidMount() {
-    const {store, selector} = this.props;
-    const selected$ = store.state$.map(selector || defaultSelector);
+    const {store} = this.props;
 
-    this.subscription = selected$.subscribe({
+    this.subscription = store.state$.subscribe({
       next: state => {
         this.setState(state);
       },
