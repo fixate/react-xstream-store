@@ -165,4 +165,19 @@ describe('XstreamContext', () => {
     expect(getByTestId('p1')).toHaveTextContent(propToPass.prop1);
     expect(getByTestId('p2')).toHaveTextContent(propToPass.prop2);
   });
+
+  test('-> props passed down to HOC are available to state selector', () => {
+    const store = getNewStore();
+    const props = {foo: 'bar'};
+    const selector = (_, passedProps) => ({text: passedProps.foo});
+    const MyComp = ({text}) => <div data-testid="div">{text}</div>;
+    const MyConnectedComponent = withStream(selector)(MyComp);
+    const {getByTestId} = renderIntoDocument(
+      <Provider store={store}>
+	<MyConnectedComponent {...props} />
+      </Provider>
+    );
+
+    expect(getByTestId('div')).toHaveTextContent(props.foo);
+  });
 });
