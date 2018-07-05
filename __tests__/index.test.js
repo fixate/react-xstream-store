@@ -113,12 +113,11 @@ describe('XstreamContext', () => {
 
   test('-> props passed down to Consumer are available to state selector', () => {
     const store = getNewStore();
-    const actions = {increment: incrementActionCreator};
     const props = {foo: 'bar'};
     const selector = (_, passedProps) => ({text: passedProps.foo});
     const {getByTestId} = renderIntoDocument(
       <Provider store={store}>
-        <Consumer actions={actions} selector={selector} {...props}>
+        <Consumer selector={selector} {...props}>
           {({text}) => <div data-testid="div">{text}</div>}
         </Consumer>
       </Provider>
@@ -130,7 +129,6 @@ describe('XstreamContext', () => {
 
   test('-> components can be connected via a HOC', () => {
     const store = getNewStore();
-    const actions = {increment: incrementActionCreator};
     const MyComp = ({counter}) => (
       <div data-testid="counter-container">{counter.value}</div>
     );
@@ -148,7 +146,6 @@ describe('XstreamContext', () => {
   test('-> HOC passes down props', () => {
     const store = getNewStore();
     const propToPass = {prop1: 'foo', prop2: 'bar'};
-    const actions = {increment: incrementActionCreator};
     const MyComp = ({prop1, prop2}) => (
       <div>
         <div data-testid="p1">{prop1}</div>;
@@ -174,7 +171,7 @@ describe('XstreamContext', () => {
     const MyConnectedComponent = withStream(selector)(MyComp);
     const {getByTestId} = renderIntoDocument(
       <Provider store={store}>
-	<MyConnectedComponent {...props} />
+        <MyConnectedComponent {...props} />
       </Provider>
     );
 
