@@ -9,7 +9,7 @@ export interface IState {
 export type State$ = Stream<IState>;
 
 export type ActionCreator = (...xs: any[]) => IAction;
-export type StateSelector = (s: IState) => IState;
+export type StateSelector = (s: IState, props?: {[key: string]: any}) => IState;
 export interface IActionMap {
   [key: string]: IAction | ActionCreator;
 }
@@ -71,12 +71,12 @@ class XstreamConnectConsumer extends React.Component<
       ...restProps
     } = this.props;
     const boundActions = getBoundActions(actions, dispatch);
-    const selectedStreamState = (selector || defaultSelector)(streamState);
+    const mappedState = (selector || defaultSelector)(streamState, restProps);
 
     return children({
       ...restProps,
       ...boundActions,
-      ...selectedStreamState,
+      ...mappedState,
       dispatch,
     });
   }
@@ -137,7 +137,7 @@ class Consumer extends React.Component<IConsumerProps> {
   displayName = 'XstreamConsumer';
 
   render() {
-    const {selector, actions, children} = this.props;
+    const {selector, actions, children, ...restProps} = this.props;
 
     return (
       <OriginalConsumer>
@@ -148,6 +148,7 @@ class Consumer extends React.Component<IConsumerProps> {
             dispatch={props.dispatch}
             selector={selector}
             streamState={props.streamState}
+            {...restProps}
           />
         )}
       </OriginalConsumer>
