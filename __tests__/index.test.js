@@ -111,6 +111,23 @@ describe('XstreamContext', () => {
     store.state$.shamefullySendComplete();
   });
 
+  test('-> props passed down to Consumer are available to state selector', () => {
+    const store = getNewStore();
+    const actions = {increment: incrementActionCreator};
+    const props = {foo: 'bar'};
+    const selector = (_, passedProps) => ({text: passedProps.foo});
+    const {getByTestId} = renderIntoDocument(
+      <Provider store={store}>
+        <Consumer actions={actions} selector={selector} {...props}>
+          {({text}) => <div data-testid="div">{text}</div>}
+        </Consumer>
+      </Provider>
+    );
+    const div = getByTestId('div');
+
+    expect(div).toHaveTextContent(props.foo);
+  });
+
   test('-> components can be connected via a HOC', () => {
     const store = getNewStore();
     const actions = {increment: incrementActionCreator};
