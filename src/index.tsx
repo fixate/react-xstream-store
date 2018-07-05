@@ -171,13 +171,16 @@ const withStream = (selector: StateSelector, actions: IActionMap) => (
     displayName = `withXstream(${ComponentToWrap.displayName})`;
 
     render() {
+      const {innerRef, ...restProps} = this.props;
+
       return (
         <Consumer
+          {...restProps}
           actions={actions}
           children={(consumerProps: any) => (
-            <ComponentToWrap {...consumerProps} {...this.props} />
+            <ComponentToWrap {...consumerProps} {...restProps} />
           )}
-          ref={this.props.innerRef}
+          ref={innerRef}
           selector={selector}
         />
       );
