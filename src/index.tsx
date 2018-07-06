@@ -161,16 +161,19 @@ const XstreamContext = {
   Provider,
 };
 
-  ComponentToWrap: React.ComponentClass
+type ComponentToWrap = string | React.ComponentType<any>;
+
 const withStream = (selector?: StateSelector, actions?: IActionMap) => (
+  ComponentToWrap: ComponentToWrap
 ) => {
   return class extends React.Component<{
     innerRef?: React.RefObject<any>;
     [key: string]: any;
   }> {
-    displayName = `withXstream(${ComponentToWrap.displayName})`;
+    static displayName = `withXstream(${(ComponentToWrap as React.ComponentClass)
+      .displayName || 'Unknown'})`;
 
-    render() {
+    public render() {
       const {innerRef, ...restProps} = this.props;
 
       return (
