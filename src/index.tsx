@@ -161,8 +161,8 @@ const XstreamContext = {
   Provider,
 };
 
-const withStream = (selector: StateSelector, actions: IActionMap) => (
   ComponentToWrap: React.ComponentClass
+const withStream = (selector?: StateSelector, actions?: IActionMap) => (
 ) => {
   return class extends React.Component<{
     innerRef?: React.RefObject<any>;
