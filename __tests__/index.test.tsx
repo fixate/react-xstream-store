@@ -48,10 +48,12 @@ describe('XstreamContext', () => {
     fireEvent.click(button);
 
     store.state$.compose(buffer(xs.never())).subscribe({
-      next(xs) {
+      next(xs: any) {
         expect(xs[0].counter.value).toBe(1);
         expect(spy).toHaveBeenCalledTimes(1);
       },
+      error() {},
+      complete() {},
     });
 
     store.state$.shamefullySendComplete();
@@ -73,10 +75,12 @@ describe('XstreamContext', () => {
     fireEvent.click(button);
 
     store.state$.compose(buffer(xs.never())).subscribe({
-      next(xs) {
+      next(xs: any) {
         expect(xs[0].counter.value).toBe(1);
         expect(spy).toHaveBeenCalledTimes(1);
       },
+      error() {},
+      complete() {},
     });
 
     store.state$.shamefullySendComplete();
@@ -101,11 +105,13 @@ describe('XstreamContext', () => {
     fireEvent.click(button);
 
     store.state$.compose(buffer(xs.never())).subscribe({
-      next(xs) {
+      next(xs: any) {
         expect(xs[0].counter.value).toBe(1);
         expect(spy).toHaveBeenCalledTimes(1);
         expect(spy).toHaveBeenCalledWith(...args);
       },
+      error() {},
+      complete() {},
     });
 
     store.state$.shamefullySendComplete();
