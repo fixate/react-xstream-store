@@ -12,6 +12,7 @@ pids
 *.pid.lock
 
 # Generated code
+dist
 index.d.ts
 index.js
 index.js.map

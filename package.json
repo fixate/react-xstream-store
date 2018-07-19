@@ -11,7 +11,7 @@
     "compile": "tsc",
     "predist": "rm -rf dist/ && mkdirp dist/ && npm run compile",
     "dist":
-      "browserify index.js --standalone xstream-store --external xstream > dist/xstream-store.js",
+      "browserify index.js --standalone xstream-store --external xstream --external react --external react-dom > dist/xstream-store.js",
     "postdist": "uglifyjs dist/xstream-store.js -o dist/xstream-store.min.js",
     "lint": "tslint src/**/*.ts -t verbose -t stylish",
     "watch:lint": "chokidar src/**/*.{ts,tsx} -c \"npm run lint\" --initial",
