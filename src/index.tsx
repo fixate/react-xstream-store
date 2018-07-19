@@ -53,8 +53,8 @@ const getBoundActions = (
 export interface IXstreamConnectConsumerProps {
   streamState: IState;
   dispatch: IDispatch;
-  actions: IActionMap;
-  selector: StateSelector;
+  actions?: IActionMap;
+  selector?: StateSelector;
   children?: (a: any) => React.ReactNode;
 }
 
