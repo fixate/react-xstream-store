@@ -42,7 +42,7 @@ const App = () =>
 ### Consumer
 
 A typical React context consumer that expects a function for `children`,
-returning bound action creators and state from the store.
+returning bound action creators, state, and `dispatch` from the store.
 
 ```javascript
 // Counter.js
@@ -61,7 +61,7 @@ const actionMap = {
 
 const Counter = () =>
   <Consumer selector={selector} actions={actions}>
-    {({count, decrement, increment}) =>
+    {({count, decrement, increment, dispatch}) =>
       <div>
         <button onClick={decrement}>-</button>
         {count}
@@ -81,7 +81,7 @@ export default Counter;
 ### withStream
 
 A higher-order component and alternative to the `Consumer` component for making
-actions and state available within a component.
+actions, state, and dispatch available within a component.
 
 ```javascript
 // Counter.js
@@ -90,7 +90,7 @@ import {withProps} from 'react-xstream-store'
 
 import {decrementAction, incrementAction} from './my-counter-stream';
 
-const Counter = ({count, decrement, increment}) =>
+const Counter = ({count, decrement, increment, dispatch}) =>
   <div>
     <button onClick={decrement}>-</button>
     {count}
