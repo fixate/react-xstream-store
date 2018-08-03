@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/react-xstream-store.svg)](https://badge.fury.io/js/react-xstream-store)
 [![codecov](https://codecov.io/gh/fixate/react-xstream-store/branch/master/graph/badge.svg)](https://codecov.io/gh/fixate/react-xstream-store)
 
-A ReactJS state provider and connector for [xstream-store](https://github.com/fixate/xstream-store).
+React components for connecting an [xstream-store](https://github.com/fixate/xstream-store) store to your components.
 
 ## Installation
 
