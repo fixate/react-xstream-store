@@ -76,7 +76,7 @@ export default Counter;
 | Prop     | Type                               | Description                                                                                                                                         |
 |----------|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | selector | fn: (state) => state               | A function that receives the entire store's state.  This is a good place to select only the state from the store your component requires.           |
-| actions  | obj: {key: actionCreator | action} | An object mapping keys to action creators.  Action creators (functions which return actions) are automatically bound to `xstream-store`'s dispatch. |
+| actions  | obj: {key: actionCreator \| action} | An object mapping keys to action creators.  Action creators (functions which return actions) are automatically bound to `xstream-store`'s dispatch. |
 
 ### withStream
 
