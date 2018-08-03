@@ -31,7 +31,7 @@ import Counter from './Counter';
 
 const App = () =>
   <Provider store={store}>
-    <Couunter />
+    <Counter />
   </Provider>
 ```
 
