@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/react-xstream-store.svg)](https://badge.fury.io/js/react-xstream-store)
 [![codecov](https://codecov.io/gh/fixate/react-xstream-store/branch/master/graph/badge.svg)](https://codecov.io/gh/fixate/react-xstream-store)
 
-A ReactJS state provider and connector for [xstream-store](https://github.com/fixate/xstream-store).
+React components for connecting an [xstream-store](https://github.com/fixate/xstream-store) store to your components.
 
 ## Installation
 
@@ -31,7 +31,7 @@ import Counter from './Counter';
 
 const App = () =>
   <Provider store={store}>
-    <Couunter />
+    <Counter />
   </Provider>
 ```
 
@@ -42,7 +42,7 @@ const App = () =>
 ### Consumer
 
 A typical React context consumer that expects a function for `children`,
-returning bound action creators and state from the store.
+returning bound action creators, state, and `dispatch` from the store.
 
 ```javascript
 // Counter.js
@@ -61,7 +61,7 @@ const actionMap = {
 
 const Counter = () =>
   <Consumer selector={selector} actions={actions}>
-    {({count, decrement, increment}) =>
+    {({count, decrement, increment, dispatch}) =>
       <div>
         <button onClick={decrement}>-</button>
         {count}
@@ -76,12 +76,12 @@ export default Counter;
 | Prop     | Type                               | Description                                                                                                                                         |
 |----------|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | selector | fn: (state) => state               | A function that receives the entire store's state.  This is a good place to select only the state from the store your component requires.           |
-| actions  | obj: {key: actionCreator | action} | An object mapping keys to action creators.  Action creators (functions which return actions) are automatically bound to `xstream-store`'s dispatch. |
+| actions  | obj: {key: actionCreator \| action} | An object mapping keys to action creators.  Action creators (functions which return actions) are automatically bound to `xstream-store`'s dispatch. |
 
 ### withStream
 
 A higher-order component and alternative to the `Consumer` component for making
-actions and state available within a component.
+actions, state, and dispatch available within a component.
 
 ```javascript
 // Counter.js
@@ -90,7 +90,7 @@ import {withProps} from 'react-xstream-store'
 
 import {decrementAction, incrementAction} from './my-counter-stream';
 
-const Counter = ({count, decrement, increment}) =>
+const Counter = ({count, decrement, increment, dispatch}) =>
   <div>
     <button onClick={decrement}>-</button>
     {count}
