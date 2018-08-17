@@ -1,12 +1,7 @@
 import * as React from 'react';
 import xs from 'xstream';
 import buffer from 'xstream/extra/buffer';
-import {
-  cleanup,
-  fireEvent,
-  render,
-  renderIntoDocument,
-} from 'react-testing-library';
+import {cleanup, fireEvent, render, renderIntoDocument} from 'react-testing-library';
 import 'jest-dom/extend-expect';
 
 import {Consumer, Provider, withStream} from '../src';
@@ -19,11 +14,9 @@ describe('XstreamContext', () => {
     const {container, getByTestId} = render(
       <Provider store={store}>
         <Consumer>
-          {({counter}) => (
-            <div data-testid="counter-container">{counter.value}</div>
-          )}
+          {({counter}) => <div data-testid="counter-container">{counter.value}</div>}
         </Consumer>
-      </Provider>
+      </Provider>,
     );
     const counterContainer = getByTestId('counter-container');
 
@@ -41,7 +34,7 @@ describe('XstreamContext', () => {
             <button data-testid="button" onClick={() => dispatch(increment)} />
           )}
         </Consumer>
-      </Provider>
+      </Provider>,
     );
     const button = getByTestId('button');
 
@@ -68,7 +61,7 @@ describe('XstreamContext', () => {
         <Consumer actions={actions}>
           {({increment}) => <button data-testid="button" onClick={increment} />}
         </Consumer>
-      </Provider>
+      </Provider>,
     );
     const button = getByTestId('button');
 
@@ -94,11 +87,9 @@ describe('XstreamContext', () => {
     const {getByTestId} = renderIntoDocument(
       <Provider store={store}>
         <Consumer actions={actions}>
-          {({increment}) => (
-            <button data-testid="button" onClick={() => increment(...args)} />
-          )}
+          {({increment}) => <button data-testid="button" onClick={() => increment(...args)} />}
         </Consumer>
-      </Provider>
+      </Provider>,
     );
     const button = getByTestId('button');
 
@@ -126,7 +117,7 @@ describe('XstreamContext', () => {
         <Consumer selector={selector} {...props}>
           {({text}) => <div data-testid="div">{text}</div>}
         </Consumer>
-      </Provider>
+      </Provider>,
     );
     const div = getByTestId('div');
 
@@ -135,14 +126,12 @@ describe('XstreamContext', () => {
 
   test('-> components can be connected via a HOC', () => {
     const store = getNewStore();
-    const MyComp = ({counter}) => (
-      <div data-testid="counter-container">{counter.value}</div>
-    );
+    const MyComp = ({counter}) => <div data-testid="counter-container">{counter.value}</div>;
     const MyConnectedComponent = withStream()(MyComp);
     const {getByTestId} = renderIntoDocument(
       <Provider store={store}>
         <MyConnectedComponent />
-      </Provider>
+      </Provider>,
     );
     const counterContainer = getByTestId('counter-container');
 
@@ -162,7 +151,7 @@ describe('XstreamContext', () => {
     const {getByTestId} = renderIntoDocument(
       <Provider store={store}>
         <MyConnectedComponent {...propToPass} />
-      </Provider>
+      </Provider>,
     );
 
     expect(getByTestId('p1')).toHaveTextContent(propToPass.prop1);
@@ -178,7 +167,7 @@ describe('XstreamContext', () => {
     const {getByTestId} = renderIntoDocument(
       <Provider store={store}>
         <MyConnectedComponent {...props} />
-      </Provider>
+      </Provider>,
     );
 
     expect(getByTestId('div')).toHaveTextContent(props.foo);
