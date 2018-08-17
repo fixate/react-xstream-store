@@ -5,13 +5,11 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "changelog":
-      "conventional-changelog --infile CHANGELOG.md --same-file --release-count 0 --preset angular",
+    "changelog": "conventional-changelog --infile CHANGELOG.md --same-file --release-count 0 --preset angular",
     "commit": "git-cz",
     "compile": "tsc",
     "predist": "rm -rf dist/ && mkdirp dist/ && npm run compile",
-    "dist":
-      "browserify index.js --standalone xstream-store --external xstream --external react --external react-dom > dist/xstream-store.js",
+    "dist": "browserify index.js --standalone xstream-store --external xstream --external react --external react-dom > dist/xstream-store.js",
     "postdist": "uglifyjs dist/xstream-store.js -o dist/xstream-store.min.js",
     "lint": "tslint src/**/*.ts -t verbose -t stylish",
     "watch:lint": "chokidar src/**/*.{ts,tsx} -c \"npm run lint\" --initial",
@@ -26,16 +24,21 @@
     "type": "git",
     "url": "https://github.com/fixate/react-xstream-store.git"
   },
-  "keywords": ["reactjs", "xstream"],
+  "keywords": [
+    "reactjs",
+    "xstream"
+  ],
   "author": "Larry Botha",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/fixate/react-xstream-store/issues"
   },
   "devDependencies": {
+    "@storybook/react": "3.4.10",
     "@types/jest": "^22.2.3",
     "@types/react": "^16.3.16",
     "@types/react-dom": "^16.0.6",
+    "babel-core": "6.26.3",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "browserify": "^16.2.2",
@@ -64,7 +67,7 @@
     "tslint-react": "^3.6.0",
     "typescript": "^2.8.3",
     "xstream": "^11.4.0",
-    "xstream-store": "^1.1.0"
+    "xstream-store": "^2.0.0"
   },
   "peerDependencies": {
     "xstream": "*",

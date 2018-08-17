@@ -1,65 +1,65 @@
-import * as React from 'react';
-import xs, {Stream} from 'xstream';
-import {IAction, IDispatch} from 'xstream-store';
+import * as React from "react";
+import xs, { Stream } from "xstream";
+import { Action, Dispatch } from "xstream-store";
 
-export interface IState {
+export interface State {
   [key: string]: any;
 }
 
-export type State$ = Stream<IState>;
+export type State$ = Stream<State>;
 
-export type ActionCreator = (...xs: any[]) => IAction;
-export type StateSelector = (s: IState, props?: {[key: string]: any}) => IState;
-export interface IActionMap {
-  [key: string]: IAction | ActionCreator;
+export type ActionCreator = (...xs: any[]) => Action;
+export type StateSelector = (s: State, props?: { [key: string]: any }) => State;
+export interface ActionMap {
+  [key: string]: Action | ActionCreator;
 }
 
-export interface IStoreContext {
-  streamState: IState;
-  dispatch: IDispatch;
+export interface StoreContext {
+  streamState: State;
+  dispatch: Dispatch;
 }
 
-const defaultContextValue: IStoreContext = {
+const defaultContextValue: StoreContext = {
   streamState: {},
-  dispatch: () => {},
+  dispatch: () => {}
 };
 
 const {
   Provider: OriginalProvider,
-  Consumer: OriginalConsumer,
+  Consumer: OriginalConsumer
 } = React.createContext(defaultContextValue);
 
 const defaultSelector: StateSelector = state => state;
 
-export type IActionBinder = (...xs: any[]) => void;
+export type ActionBinder = (...xs: any[]) => void;
 
 const getBoundActions = (
-  actions: IActionMap = {},
-  dispatch: IDispatch
-): IActionMap => {
+  actions: ActionMap = {},
+  dispatch: Dispatch
+): ActionMap => {
   const boundActions = Object.keys(actions).reduce((acc, actionName) => {
-    const action: ActionCreator | IAction = actions[actionName];
-    const isActionCreator = typeof action === 'function';
-    const actionToReturn: IActionBinder | IAction = isActionCreator
+    const action: ActionCreator | Action = actions[actionName];
+    const isActionCreator = typeof action === "function";
+    const actionToReturn: ActionBinder | Action = isActionCreator
       ? (...args) => dispatch((action as ActionCreator)(...args))
       : action;
 
-    return {...acc, [actionName]: actionToReturn};
+    return { ...acc, [actionName]: actionToReturn };
   }, {});
 
   return boundActions;
 };
 
-export interface IXstreamConnectConsumerProps {
-  streamState: IState;
-  dispatch: IDispatch;
-  actions?: IActionMap;
+export interface XstreamConnectConsumerProps {
+  streamState: State;
+  dispatch: Dispatch;
+  actions?: ActionMap;
   selector?: StateSelector;
   children?: (a: any) => React.ReactNode;
 }
 
 class XstreamConnectConsumer extends React.Component<
-  IXstreamConnectConsumerProps
+  XstreamConnectConsumerProps
 > {
   render() {
     const {
@@ -77,33 +77,33 @@ class XstreamConnectConsumer extends React.Component<
       ...restProps,
       ...boundActions,
       ...mappedState,
-      dispatch,
+      dispatch
     });
   }
 }
 
-export interface IConsumerProps {
-  actions?: IActionMap;
+export interface ConsumerProps {
+  actions?: ActionMap;
   children: (...props: any[]) => React.ReactNode;
   selector?: StateSelector;
   ref?: React.RefObject<any>;
 }
 
-export interface IXstreamProviderProps {
+export interface XstreamProviderProps {
   store: {
     state$: State$;
-    dispatch: IDispatch;
-    initialState: IState;
+    dispatch: Dispatch;
+    initialState: State;
   };
 }
 
-class Provider extends React.Component<IXstreamProviderProps, IState> {
-  displayName = 'XstreamProvider';
+class Provider extends React.Component<XstreamProviderProps, State> {
+  displayName = "XstreamProvider";
 
-  subscription = {unsubscribe: () => {}};
+  subscription = { unsubscribe: () => {} };
 
   componentDidMount() {
-    const {store} = this.props;
+    const { store } = this.props;
 
     this.subscription = store.state$.subscribe({
       next: state => {
@@ -112,7 +112,7 @@ class Provider extends React.Component<IXstreamProviderProps, IState> {
       error(e) {
         throw Error(e);
       },
-      complete() {},
+      complete() {}
     });
   }
 
@@ -121,27 +121,27 @@ class Provider extends React.Component<IXstreamProviderProps, IState> {
   }
 
   render() {
-    const {children, store} = this.props;
+    const { children, store } = this.props;
     const streamState = this.state || store.initialState;
 
     return (
       <OriginalProvider
         children={children}
-        value={{streamState, dispatch: store.dispatch}}
+        value={{ streamState, dispatch: store.dispatch }}
       />
     );
   }
 }
 
-class Consumer extends React.Component<IConsumerProps> {
-  displayName = 'XstreamConsumer';
+class Consumer extends React.Component<ConsumerProps> {
+  displayName = "XstreamConsumer";
 
   render() {
-    const {selector, actions, children, ...restProps} = this.props;
+    const { selector, actions, children, ...restProps } = this.props;
 
     return (
       <OriginalConsumer>
-        {(props: IStoreContext) => (
+        {(props: StoreContext) => (
           <XstreamConnectConsumer
             actions={actions}
             children={children}
@@ -158,14 +158,14 @@ class Consumer extends React.Component<IConsumerProps> {
 
 const XstreamContext = {
   Consumer,
-  Provider,
+  Provider
 };
 
 type ComponentToWrap = string | React.ComponentType<any>;
 
 export type WithStream = (
   selector?: StateSelector | null,
-  actions?: IActionMap | null
+  actions?: ActionMap | null
 ) => React.ReactNode;
 
 const withStream: WithStream = (selector, actions) => (
@@ -176,10 +176,10 @@ const withStream: WithStream = (selector, actions) => (
     [key: string]: any;
   }> {
     static displayName = `withXstream(${(ComponentToWrap as React.ComponentClass)
-      .displayName || 'Unknown'})`;
+      .displayName || "Unknown"})`;
 
     public render() {
-      const {innerRef, ...restProps} = this.props;
+      const { innerRef, ...restProps } = this.props;
 
       return (
         <Consumer
@@ -196,6 +196,6 @@ const withStream: WithStream = (selector, actions) => (
   };
 };
 
-export {Provider, Consumer, withStream};
+export { Provider, Consumer, withStream };
 
 export default XstreamContext;
