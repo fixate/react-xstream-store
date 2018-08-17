@@ -163,10 +163,7 @@ const XstreamContext = {
 
 type ComponentToWrap = string | React.ComponentType<any>;
 
-export type WithStream = (
-  selector?: StateSelector | null,
-  actions?: ActionMap | null
-) => React.ReactNode;
+export type WithStream = (selector?: StateSelector | null, actions?: ActionMap | null) => any;
 
 const withStream: WithStream = (selector, actions) => (
   ComponentToWrap: ComponentToWrap
